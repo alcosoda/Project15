@@ -2,6 +2,8 @@ import dash
 from dash import html, dcc, Input, Output, State
 import requests
 
+# проверка для коммита
+
 app = dash.Dash(__name__)
 
 app.layout = html.Div(children=[
