@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from logic import Connect, Weather
-from visualizations import create_visualizations  # Импортируем функцию
+from visualizations import create_visualizations
 
 app = Flask(__name__)
 api_key = 'Fv4JolXK4AKTAX2FsbEp0JLln58mwQD0'  # Replace with your AccuWeather API key
@@ -9,20 +9,21 @@ api_key = 'Fv4JolXK4AKTAX2FsbEp0JLln58mwQD0'  # Replace with your AccuWeather AP
 def main_page():
     if request.method == 'POST':
         try:
-            cities = request.form.getlist('cities[]')
+            cities = request.form.getlist('cities[]')  # Получаем список городов из формы
+            days = int(request.form.get('days', 5))
             weather_data = {}
 
             for city in cities:
                 api = Connect(api_key=api_key)
-                weather_lst = api.get_weather(city)
+                weather_lst = api.get_weather(city, days=days)
 
                 weather_data[city] = []
                 for item in weather_lst:
                     item.info = item.validate()
                     weather_data[city].append(item)
 
-            visualizations = create_visualizations(weather_data)  # Создаем визуализации
-            return render_template('result.html', weather_data=weather_data, visualizations=visualizations, format={'Day': 'День', 'Night': 'Ночь'})
+            visualizations = create_visualizations(weather_data)
+            return render_template('index.html', weather_data=weather_data, visualizations=visualizations, format={'Day': 'День', 'Night': 'Ночь'})
 
         except KeyError:
             return render_template('error_message.html', msg='В форме не хватает полей')

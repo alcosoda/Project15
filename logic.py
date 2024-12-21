@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 
 class Connect:
@@ -21,9 +21,9 @@ class Connect:
         res = req.json()
         return res[0]['Key']
 
-    def get_weather(self, city):
+    def get_weather(self, city, days=5):  # Добавляем параметр days
         location_key = self.get_key(city)
-        req = requests.get(url=f'{self.address}forecasts/v1/daily/5day/{location_key}',
+        req = requests.get(url=f'{self.address}forecasts/v1/daily/{days}day/{location_key}',
                            params={
                                'apikey': self.api_key,
                                'language': 'en-us',
