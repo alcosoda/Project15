@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погодизатор маршрутизатор</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #343a40;
+            margin: 0;
+            padding: 20px;
+            color: #f8f9fa;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: auto;
+            background: #454d55;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: block; /* Changed to block */
+            align-items: flex-start; /* Changed to flex-start */
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #f8f9fa;
+            width: 100%; /* Changed to 100% */
+        }
+
+        .form-input {
+            width: calc(100% - 20px); /* Changed width */
+            padding: 10px;
+            border: 1px solid #6c757d;
+            border-radius: 4px;
+            background-color: #454d55;
+            color: #f8f9fa;
+            margin-right: 0; /* Removed margin-right */
+            font-size: 18px; /* Increased font size */
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        #addCityBtn {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 20px;
+        }
+
+        #cityInputs {
+            display: flex;
+            flex-direction: column;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2 style="color: #f8f9fa;">Введите пункты вашего маршрута</h2>
+        <form method="post" id="cityForm">
+            <div id="cityInputs">
+                <div class="form-group">
+                    <label for="point_start" class="form-label">Город 1</label>
+                    <input type="text" class="form-input" name="cities[]" id="point_start" placeholder="Введите город">
+                </div>
+            </div>
+            <button type="button" id="addCityBtn" class="submit-button">+</button>
+            <br>
+            <button type="submit" class="submit-button">Отправить</button>
+        </form>
+    </div>
+
+    <script>
+        const addCityBtn = document.getElementById('addCityBtn');
+        const cityInputs = document.getElementById('cityInputs');
+        let cityCount = 2;
+
+        addCityBtn.addEventListener('click', () => {
+            const newCityInput = document.createElement('div');
+            newCityInput.classList.add('form-group');
+            newCityInput.innerHTML = `
+                <label for="point_start" class="form-label">Город ${cityCount}</label>
+                <input type="text" class="form-input" name="cities[]" placeholder="Введите город">
+                <button type="button" class="removeCityBtn submit-button">-</button>
+            `;
+            cityInputs.appendChild(newCityInput);
+            cityCount++;
+
+            const removeCityBtn = newCityInput.querySelector('.removeCityBtn');
+            removeCityBtn.addEventListener('click', () => {
+                newCityInput.remove();cityCount--;
+
+                const cityLabels = document.querySelectorAll('.form-label');
+                cityLabels.forEach((label, index) => {
+                    label.textContent = `Город ${index + 1}`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
