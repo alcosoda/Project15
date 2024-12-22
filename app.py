@@ -4,7 +4,7 @@ from visualizations import create_visualizations
 from map import create_map
 
 app = Flask(__name__)
-api_key = 'Fv4JolXK4AKTAX2FsbEp0JLln58mwQD0'  # Replace with your AccuWeather API key
+api_key = 'DJqxaWfNNUSetIYlo4vGCrlPTukiQkdQ'  # Replace with your AccuWeather API key
 
 
 @app.route('/', methods=['GET', 'POST'])
