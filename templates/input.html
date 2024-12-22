@@ -24,26 +24,26 @@
 
         .form-group {
             margin-bottom: 15px;
-            display: block;
-            align-items: flex-start;
+            display: block; /* Changed to block */
+            align-items: flex-start; /* Changed to flex-start */
         }
 
         .form-label {
             display: block;
             margin-bottom: 5px;
             color: #f8f9fa;
-            width: 100%;
+            width: 100%; /* Changed to 100% */
         }
 
         .form-input {
-            width: calc(100% - 20px);
+            width: calc(100% - 20px); /* Changed width */
             padding: 10px;
             border: 1px solid #6c757d;
             border-radius: 4px;
             background-color: #454d55;
             color: #f8f9fa;
-            margin-right: 0;
-            font-size: 18px;
+            margin-right: 0; /* Removed margin-right */
+            font-size: 18px; /* Increased font size */
         }
 
         .submit-button {
@@ -69,6 +69,7 @@
             display: flex;
             flex-direction: column;
         }
+
     </style>
 </head>
 <body>
@@ -77,16 +78,21 @@
         <form method="post" id="cityForm">
             <div id="cityInputs">
                 <div class="form-group">
-                    <label for="city1" class="form-label">Город 1</label>
-                    <input type="text" class="form-input" name="cities[]" id="city1" placeholder="Введите город">
+                    <label for="point_start" class="form-label">Город 1</label>
+                    <input type="text" class="form-input" name="cities[]" id="point_start" placeholder="Введите город">
                 </div>
             </div>
             <button type="button" id="addCityBtn" class="submit-button">+</button>
             <br>
+
             <div class="form-group">
-                <label for="days" class="form-label">Количество дней для прогноза:</label>
-                <input type="number" class="form-input" name="days" id="days" value="5" min="1" max="10">
+                <label for="days" class="form-label">Дней:</label>
+                <button type="button" id="decreaseDaysBtn" class="submit-button">-</button>
+                <span id="daysValue">1</span>
+                <button type="button" id="increaseDaysBtn" class="submit-button">+</button>
+                <input type="hidden" name="days" id="daysInput" value="1">
             </div>
+
             <button type="submit" class="submit-button">Отправить</button>
         </form>
     </div>
@@ -100,8 +106,8 @@
             const newCityInput = document.createElement('div');
             newCityInput.classList.add('form-group');
             newCityInput.innerHTML = `
-                <label for="city${cityCount}" class="form-label">Город ${cityCount}</label>
-                <input type="text" class="form-input" name="cities[]" id="city${cityCount}" placeholder="Введите город">
+                <label for="point_start" class="form-label">Город ${cityCount}</label>
+                <input type="text" class="form-input" name="cities[]" placeholder="Введите город">
                 <button type="button" class="removeCityBtn submit-button">-</button>
             `;
             cityInputs.appendChild(newCityInput);
@@ -109,21 +115,36 @@
 
             const removeCityBtn = newCityInput.querySelector('.removeCityBtn');
             removeCityBtn.addEventListener('click', () => {
-                newCityInput.remove();
-                cityCount--;
+                newCityInput.remove();cityCount--;
 
                 const cityLabels = document.querySelectorAll('.form-label');
                 cityLabels.forEach((label, index) => {
                     label.textContent = `Город ${index + 1}`;
-                    label.htmlFor = `city${index + 1}`; // Обновляем атрибут for
-                });
-
-                const cityInputs = document.querySelectorAll('.form-input[name="cities[]"]');
-                cityInputs.forEach((input, index) => {
-                    input.id = `city${index + 1}`; // Обновляем атрибут id
                 });
             });
         });
+
+        const decreaseDaysBtn = document.getElementById('decreaseDaysBtn');
+        const increaseDaysBtn = document.getElementById('increaseDaysBtn');
+        const daysValue = document.getElementById('daysValue');
+        const daysInput = document.getElementById('daysInput');
+
+        let days = 1;
+
+        decreaseDaysBtn.addEventListener('click', () => {
+            days = Math.max(1, days - 1);
+            updateDays();
+        });
+
+        increaseDaysBtn.addEventListener('click', () => {
+            days = Math.min(5, days + 1);
+            updateDays();
+        });
+
+        function updateDays() {
+            daysValue.textContent = days;
+            daysInput.value = days;
+        }
     </script>
 </body>
 </html>
