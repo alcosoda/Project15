@@ -24,22 +24,13 @@ def create_map(cities, api_key):
     else:
         return None
 
-def get_coordinates(city, api_key):  # Изменяем функцию для получения координат
+def get_coordinates(city, api_key):
     """Получает координаты города от AccuWeather API."""
     headers = {'apikey': api_key}
-    url = f"http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey={api_key}&q={city}"  # Исправляем endpoint
-    response = requests.get(url, headers=headers)  # Добавляем заголовки
+    url = f"http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey={api_key}&q={city}"
+    response = requests.get(url, headers=headers)
     if response.status_code == 200:
         data = response.json()
         if data:
-            return (data['Latitude'], data['Longitude'])  # Изменяем ключи для координат
-    return None
-
-def get_coordinates(location_key, api_key):
-    url = f"http://dataservice.accuweather.com/locations/v1/{location_key}?apikey={api_key}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        if data:
-            return (data['GeoPosition']['Latitude'], data['GeoPosition']['Longitude'])
+            return (data['Latitude'], data['Longitude'])
     return None

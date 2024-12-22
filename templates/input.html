@@ -77,8 +77,8 @@
         <form method="post" id="cityForm">
             <div id="cityInputs">
                 <div class="form-group">
-                    <label for="point_start" class="form-label">Город 1</label>
-                    <input type="text" class="form-input" name="cities[]" id="point_start" placeholder="Введите город">
+                    <label for="city1" class="form-label">Город 1</label>
+                    <input type="text" class="form-input" name="cities[]" id="city1" placeholder="Введите город">
                 </div>
             </div>
             <button type="button" id="addCityBtn" class="submit-button">+</button>
@@ -100,8 +100,8 @@
             const newCityInput = document.createElement('div');
             newCityInput.classList.add('form-group');
             newCityInput.innerHTML = `
-                <label for="point_start" class="form-label">Город ${cityCount}</label>
-                <input type="text" class="form-input" name="cities[]" placeholder="Введите город">
+                <label for="city${cityCount}" class="form-label">Город ${cityCount}</label>
+                <input type="text" class="form-input" name="cities[]" id="city${cityCount}" placeholder="Введите город">
                 <button type="button" class="removeCityBtn submit-button">-</button>
             `;
             cityInputs.appendChild(newCityInput);
@@ -109,11 +109,18 @@
 
             const removeCityBtn = newCityInput.querySelector('.removeCityBtn');
             removeCityBtn.addEventListener('click', () => {
-                newCityInput.remove();cityCount--;
+                newCityInput.remove();
+                cityCount--;
 
                 const cityLabels = document.querySelectorAll('.form-label');
                 cityLabels.forEach((label, index) => {
                     label.textContent = `Город ${index + 1}`;
+                    label.htmlFor = `city${index + 1}`; // Обновляем атрибут for
+                });
+
+                const cityInputs = document.querySelectorAll('.form-input[name="cities[]"]');
+                cityInputs.forEach((input, index) => {
+                    input.id = `city${index + 1}`; // Обновляем атрибут id
                 });
             });
         });

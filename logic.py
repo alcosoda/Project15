@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
 import requests
 
+
 class Connect:
     def __init__(
             self,
             api_key,
-            address='http://dataservice.accuweather.com/'  # Исправляем базовый URL
+            address='https://dataservice.accuweather.com/'
     ):
         self.address = address
         self.api_key = api_key
@@ -20,12 +21,24 @@ class Connect:
                            },
                            headers=headers)
         res = req.json()
-        return res[0]['Key']
+
+        # Проверка на наличие результатов
+        if res:
+            return res[0]['Key']
+        else:
+            return None  # Или raise Exception('Город не найден')
 
     def get_weather(self, city, days=5):
         location_key = self.get_key(city)
+
+        # Проверка на наличие location_key
+        if not location_key:
+            return []  # Или raise Exception('Не удалось получить ключ местоположения')
+
         headers = {'apikey': self.api_key}
-        req = requests.get(url=f'{self.address}forecasts/v1/daily/{days}day/{location_key}',
+
+        # Используем 5day endpoint и правильные параметры
+        req = requests.get(url=f'{self.address}forecasts/v1/daily/5day/{location_key}',
                            params={
                                'language': 'en-us',
                                'details': 'true',
@@ -41,7 +54,7 @@ class Connect:
                             part=day_part,
                             location=city,
                             rain=day[day_part]['RainProbability'],
-                            humidity=day[day_part]['RelativeHumidity']['Average'],
+                            humidity=day[day_part]['RelativeHumidity'],
                             wind=day[day_part]['Wind']['Speed']['Value'],
                             temp_c=(day['Temperature']['Minimum']['Value'] +
                                     day['Temperature']['Maximum']['Value']) / 2)
@@ -50,7 +63,6 @@ class Connect:
 
 
 class Weather:
-    # ... (остальной код) ...
     def __init__(self, location, date, part, rain, humidity, temp_c, wind):
         self.location = location
         self.date = date
