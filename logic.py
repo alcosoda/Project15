@@ -5,31 +5,33 @@ class Connect:
     def __init__(
             self,
             api_key,
-            address='http://dataservice.accuweather.com/'
+            address='http://dataservice.accuweather.com/'  # Исправляем базовый URL
     ):
         self.address = address
         self.api_key = api_key
 
     def get_key(self, city):
+        headers = {'apikey': self.api_key}
         req = requests.get(url=f'{self.address}locations/v1/cities/search',
                            params={
-                               'apikey': self.api_key,
                                'q': city,
                                'language': 'en-us',
                                'details': 'true'
-                           })
+                           },
+                           headers=headers)
         res = req.json()
         return res[0]['Key']
 
-    def get_weather(self, city, days=5):  # Добавляем параметр days
+    def get_weather(self, city, days=5):
         location_key = self.get_key(city)
+        headers = {'apikey': self.api_key}
         req = requests.get(url=f'{self.address}forecasts/v1/daily/{days}day/{location_key}',
                            params={
-                               'apikey': self.api_key,
                                'language': 'en-us',
                                'details': 'true',
                                'metric': 'true'
-                           })
+                           },
+                           headers=headers)
         res = req.json()
         lst = list()
         for day in res['DailyForecasts']:
@@ -48,6 +50,7 @@ class Connect:
 
 
 class Weather:
+    # ... (остальной код) ...
     def __init__(self, location, date, part, rain, humidity, temp_c, wind):
         self.location = location
         self.date = date
